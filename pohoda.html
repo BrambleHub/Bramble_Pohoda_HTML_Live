@@ -1,0 +1,65 @@
+PE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display a map on a webpage</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+    <div id='map' style='width: 100vw; height: 100vh;'></div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: [18.000873, 48.867029], // starting position [lng, lat]
+        zoom: 16, // starting zoom
+        minZoom: 14,
+        maxZoom: 17,
+        bearing: -47.16,
+        pitch: 0,
+        style: 'mapbox://styles/bramble22/clt1biq8y00hr01qw8xygf5h0'
+    });
+
+    //limitpitch
+
+    function limitPitch() {
+    const minPitch = 0; // Minimum allowed pitch
+    const maxPitch = 30; // Maximum allowed pitch
+    const currentPitch = map.getPitch();
+    if (currentPitch < minPitch) {
+        map.setPitch(minPitch);
+    } else if (currentPitch > maxPitch) {
+        map.setPitch(maxPitch);
+    }
+}
+
+map.on('pitch', limitPitch);
+map.on('move', limitPitch);
+    
+
+// 
+
+//geolocate
+
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true,
+    showUserHeading: true
+}));
+
+
+    </script>
+     
+  
+
+</body>
+</html>
+
