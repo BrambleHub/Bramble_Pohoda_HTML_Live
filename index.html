@@ -1,4 +1,4 @@
-PE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -15,37 +15,49 @@ body { margin: 0; padding: 0; }
     <div id='map' style='width: 100vw; height: 100vh;'></div>
     <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
-    const map = new mapboxgl.Map({
+
+    // Center point
+    var centerPoint = [18.000864, 48.868211]; // [lng, lat]
+
+    // Function to calculate coordinates for a bounding box around a center point with a given radius (in kilometers)
+    function calculateBounds(center, radius) {
+        // Convert radius from kilometers to degrees (approximately)
+        var radiusInDegrees = radius / 111; // 1 degree = approximately 111 kilometers
+
+        var lngMin = center[0] - radiusInDegrees;
+        var lngMax = center[0] + radiusInDegrees;
+
+        // Approximate latitude degrees difference for 2 km radius (for small distances, this approximation is accurate enough)
+        var latDiff = radiusInDegrees / Math.cos(center[1] * Math.PI / 180);
+        var latMin = center[1] - latDiff;
+        var latMax = center[1] + latDiff;
+
+        return [[lngMin, latMin], [lngMax, latMax]];
+    }
+
+    var bounds = calculateBounds(centerPoint, 2); // 2 km radius
+
+    var map = new mapboxgl.Map({
         container: 'map', // container ID
-        center: [18.000864, 48.868211], // starting position [lng, lat]
-        zoom: 15, // starting zoom
+        center: centerPoint, // starting position [lng, lat]
+        zoom: 16, // starting zoom
         minZoom: 14,
         maxZoom: 17,
         bearing: -47.16,
         pitch: 0,
-        style: 'mapbox://styles/bramble22/clt1gs34100ht01pi9lr3cdhp'
+        style: 'mapbox://styles/bramble22/clt1gs34100ht01pi9lr3cdhp',
+        maxBounds: bounds // Set the maximum bounds
     });
 
-   
-    
-
-// 
-
-//geolocate
-
-map.addControl(new mapboxgl.GeolocateControl({
-    positionOptions: {
-        enableHighAccuracy: true
-    },
-    trackUserLocation: true,
-    showUserHeading: true
-}));
-
+    // Geolocate control
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true,
+        showUserHeading: true
+    }));
 
     </script>
-     
-  
-
 </body>
 </html>
-
