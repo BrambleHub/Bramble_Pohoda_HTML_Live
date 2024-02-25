@@ -35,7 +35,7 @@ body { margin: 0; padding: 0; }
         return [[lngMin, latMin], [lngMax, latMax]];
     }
 
-    var bounds = calculateBounds(centerPoint, 2); // 2 km radius
+    var bounds = calculateBounds(centerPoint, 1.5); // 1.5 km radius
 
     var map = new mapboxgl.Map({
         container: 'map', // container ID
