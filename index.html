@@ -26,21 +26,7 @@ body { margin: 0; padding: 0; }
         style: 'mapbox://styles/bramble22/clt1gs34100ht01pi9lr3cdhp'
     });
 
-    //limitpitch
-
-    function limitPitch() {
-    const minPitch = 0; // Minimum allowed pitch
-    const maxPitch = 30; // Maximum allowed pitch
-    const currentPitch = map.getPitch();
-    if (currentPitch < minPitch) {
-        map.setPitch(minPitch);
-    } else if (currentPitch > maxPitch) {
-        map.setPitch(maxPitch);
-    }
-}
-
-map.on('pitch', limitPitch);
-map.on('move', limitPitch);
+   
     
 
 // 
