@@ -58,6 +58,25 @@ body { margin: 0; padding: 0; }
         showUserHeading: true
     }));
 
+    // popup
+// Create a yellow marker
+let marker = new mapboxgl.Marker({ color: "yellow" })
+  .setLngLat([18.000864, 48.868211])
+  .addTo(map);
+
+// Create a closed popup with a vertical offset of 15 meters
+var popup = new mapboxgl.Popup({
+    offset: 25, // Adjust the vertical offset as needed
+    closeButton: false // Do not show close button by default
+  })
+  .setText('Slovenská Sporiteľna Stage')
+  .addTo(map);
+
+// Associate the popup with the marker
+marker.setPopup(popup);
+
+
+
     </script>
 </body>
 </html>
