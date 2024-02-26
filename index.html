@@ -25,21 +25,8 @@ var map = new mapboxgl.Map({
     style: 'mapbox://styles/bramble22/clt1zj2nv006y01p8gz6zeohx'
 });
 
-map.on('load', function () {
-    map.dragRotate.disable(); // Disables map rotation control by dragging with the right mouse button.
-    map.touchZoomRotate.disableRotation(); // Disables map rotation control for touch events.
-
-    let desiredPitch = 54.53; // The pitch you want to maintain
-
-    function adjustPitch() {
-        if (map.getPitch() !== desiredPitch) {
-            map.easeTo({pitch: desiredPitch, duration: 500}); // Adjust pitch smoothly over 500 milliseconds
-        }
-    }
-
-    map.on('pitch', adjustPitch); // Adjust pitch whenever a pitch change is detected
-});
-
+// disable map tilting using two-finger gesture
+map.touchPitch.disable();
 </script>
 </body>
 </html>
