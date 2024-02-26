@@ -40,14 +40,21 @@ body { margin: 0; padding: 0; }
     var map = new mapboxgl.Map({
         container: 'map', // container ID
         center: centerPoint, // starting position [lng, lat]
-        zoom: 15, // starting zoom
+        zoom: 16.5, // starting zoom
         minZoom: 14,
         maxZoom: 17,
-        bearing: -109.05,
-        pitch: 71.08,
+        bearing: -90.37,
+        pitch: 54.53,
         style: 'mapbox://styles/bramble22/clt1zj2nv006y01p8gz6zeohx',
         maxBounds: bounds // Set the maximum bounds
+        
     });
+
+    // Disable pitch adjustment by the user
+map.on('load', function () {
+    map.dragRotate.disable(); // Disable map rotation when dragging with the right mouse button
+    map.touchZoomRotate.disableRotation(); // Disable map rotation for touch events
+});
 
     // Geolocate control
     map.addControl(new mapboxgl.GeolocateControl({
