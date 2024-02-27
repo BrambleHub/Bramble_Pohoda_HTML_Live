@@ -16,15 +16,22 @@ body { margin: 0; padding: 0; }
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
 
+// Define the bounds around the center point [18.000031, 48.870137]
+const bounds = [
+    [17.975, 48.855], // Southwest coordinates
+    [18.025, 48.885]  // Northeast coordinates
+];
+
 var map = new mapboxgl.Map({
     container: 'map', // container ID
     center: [18.000031, 48.870137], // starting position [lng, lat]
     zoom: 16.5, // starting zoom
     bearing: -90.37,
     pitch: 54.53, // Set your desired pitch here
-    style: 'mapbox://styles/bramble22/clt3kxhiv00na01me3r5ib6bh',
+    style: 'mapbox://styles/bramble22/clt3lt784003f01r04y37544p',
     minZoom: 15, // Minimum zoom level
-    maxZoom: 17 // Maximum zoom level
+    maxZoom: 17, // Maximum zoom level
+    maxBounds: bounds // Set the map's geographical boundaries.
 });
 
 // disable map tilting using two-finger gesture
