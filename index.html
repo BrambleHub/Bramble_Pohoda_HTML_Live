@@ -25,6 +25,12 @@ body { margin: 0; padding: 0; }
     font-size: 14px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: add some shadow for better visibility */
 }
+#compass {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
 </style>
 </head>
 <body>
@@ -37,6 +43,12 @@ body { margin: 0; padding: 0; }
     </svg>
     CENTER
 </button>
+<div id="compass">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-compass" width="48px" height="48px">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+    </svg>
+</div>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
 
@@ -81,6 +93,18 @@ document.getElementById('return-to-center').onclick = function() {
         zoom: 16
     });
 };
+
+function updateCompass() {
+    var rotate = `rotate(${-map.getBearing()}deg)`;
+    document.getElementById('compass').style.transform = rotate;
+}
+
+map.on('rotate', function() {
+    updateCompass();
+});
+
+// Initialize compass orientation
+updateCompass();
 </script>
 </body>
 </html>
