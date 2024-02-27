@@ -9,12 +9,34 @@
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-.mapboxgl-ctrl-top-right { margin-top: 50px; } /* Adjust control button position */
+#return-to-center {
+    position: absolute;
+    bottom: 20px;
+    left: 50%; /* Center the button horizontally */
+    transform: translateX(-50%); /* Adjust for the button's width to truly center it */
+    z-index: 1;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: add some shadow for better visibility */
+}
 </style>
 </head>
 <body>
 <div id='map' style='width: 100vw; height: 100vh;'></div>
-<button id="return-to-center" style="position: absolute; top: 10px; right: 10px; z-index: 1;">Return to Center</button>
+<button id="return-to-center">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px" style="margin-right: 5px;">
+        <!-- Example house icon -->
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 3L4 9v12h5v-7h6v7h5V9z"/>
+    </svg>
+    CENTER
+</button>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
 
