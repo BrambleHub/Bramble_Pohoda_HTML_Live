@@ -22,9 +22,10 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            background-color: transparent;
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly black but transparent background */
+            padding: 8px; /* Adjusted padding */
             margin: 10px; /* Adjusted margin */
-            padding: 0;
+            border-radius: 12px; /* Rounded corners */
         }
         
         /* Button to return to center */
@@ -38,6 +39,12 @@
             font-size: 14px;
             box-shadow: none; /* Remove box shadow */
             margin: 5px; /* Adjusted margin */
+            transition: transform 0.2s ease; /* Add smooth transition */
+        }
+        
+        /* Animate button when pressed */
+        #return-to-center.pressed {
+            transform: scale(0.9);
         }
         
         /* Compass icon */
@@ -48,26 +55,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-        
-        /* Geolocation button */
-        .mapboxgl-ctrl-geolocate {
-            margin: 5px; /* Adjusted margin */
-        }
-        
-        .mapboxgl-ctrl-geolocate-button {
-            background-color: transparent; /* Set button background color */
-            border-radius: 50%; /* Make it round */
-            padding: 10px; /* Adjust padding */
-            box-shadow: none; /* Remove box shadow */
-            border: none; /* Remove border */
-            cursor: pointer;
-        }
-        
-        .mapboxgl-ctrl-geolocate-button .mapboxgl-ctrl-icon {
-            fill: none; /* Remove fill from the icon */
-            stroke: white; /* Set stroke color to white */
-            stroke-width: 2; /* Set stroke width */
         }
     </style>
     
@@ -84,8 +71,6 @@
             <!-- Replace 'YOUR_COMPASS_IMAGE_URL' with the URL of your PNG compass image -->
             <img src="https://github.com/brambleappmatus/resources/blob/main/compass.png?raw=true" alt="Compass" width="32px" height="32px">
         </div>
-        <!-- Geolocation button -->
-        <div class="mapboxgl-ctrl-geolocate"></div>
         <!-- Button to return to center -->
         <button id="return-to-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px">
@@ -116,23 +101,22 @@
             maxBounds: bounds
         });
         
-        // Add geolocation control to the map
-        map.addControl(new mapboxgl.GeolocateControl({
-            positionOptions: { enableHighAccuracy: true },
-            trackUserLocation: true,
-            showUserLocation: true,
-            showAccuracyCircle: false
-        }));
-        
         // Disable map tilting using two-finger gesture
         map.touchPitch.disable();
         
         // Button to return to the center
         document.getElementById('return-to-center').onclick = function() {
+            this.classList.add('pressed'); // Add 'pressed' class for animation
             map.flyTo({
                 center: center,
-                zoom: 16
+                zoom: 16,
+                speed: 0.5, // Adjust fly speed as needed
+                curve: 1 // Adjust curve as needed
             });
+            // Remove 'pressed' class after animation completes
+            setTimeout(() => {
+                this.classList.remove('pressed');
+            }, 200); // Adjust timeout to match animation duration
         };
         
         // Update compass rotation
