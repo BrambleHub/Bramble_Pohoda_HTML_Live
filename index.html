@@ -1,110 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Smooth Pitch Correction Map</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
-<link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
-<style>
-body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-#return-to-center {
-    position: absolute;
-    bottom: 20px;
-    left: 50%; /* Center the button horizontally */
-    transform: translateX(-50%); /* Adjust for the button's width to truly center it */
-    z-index: 1;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: add some shadow for better visibility */
-}
-#compass {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
-}
-</style>
+    <meta charset="utf-8">
+    <title>Smooth Pitch Correction Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <!-- Include Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- CSS Styles -->
+    <style>
+        /* Reset default margin and padding */
+        body { margin: 0; padding: 0; }
+        
+        /* Map container styles */
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        
+        /* Menu container */
+        #menu {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: transparent;
+            margin: 10px; /* Adjusted margin */
+            padding: 0;
+        }
+        
+        /* Button to return to center */
+        #return-to-center {
+            background-color: transparent; /* Make background transparent */
+            border: none; /* Remove border */
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            box-shadow: none; /* Remove box shadow */
+            margin: 5px; /* Adjusted margin */
+        }
+        
+        /* Compass icon */
+        #compass {
+            margin: 10px;
+            transition: transform 0.5s ease; /* Add smooth transition */
+            transform-origin: center; /* Set transform origin to center */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Geolocation button */
+        .mapboxgl-ctrl-geolocate {
+            margin: 5px; /* Adjusted margin */
+        }
+        
+        .mapboxgl-ctrl-geolocate-button {
+            background-color: transparent; /* Set button background color */
+            border-radius: 50%; /* Make it round */
+            padding: 10px; /* Adjust padding */
+            box-shadow: none; /* Remove box shadow */
+            border: none; /* Remove border */
+            cursor: pointer;
+        }
+        
+        .mapboxgl-ctrl-geolocate-button .mapboxgl-ctrl-icon {
+            fill: none; /* Remove fill from the icon */
+            stroke: white; /* Set stroke color to white */
+            stroke-width: 2; /* Set stroke width */
+        }
+    </style>
+    
 </head>
 <body>
-<div id='map' style='width: 100vw; height: 100vh;'></div>
-<button id="return-to-center">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px" style="margin-right: 5px;">
-        <!-- Example house icon -->
-        <path d="M0 0h24v24H0z" fill="none"/>
-        <path d="M12 3L4 9v12h5v-7h6v7h5V9z"/>
-    </svg>
-    CENTER
-</button>
-<div id="compass">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-compass" width="48px" height="48px">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
-    </svg>
-</div>
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
 
-const center = [18.000031, 48.870137]; // Define center for reuse
+    <!-- Map container -->
+    <div id='map'></div>
+    
+    <!-- Menu container -->
+    <div id="menu">
+        <!-- Compass icon -->
+        <div id="compass">
+            <!-- Replace 'YOUR_COMPASS_IMAGE_URL' with the URL of your PNG compass image -->
+            <img src="https://github.com/brambleappmatus/resources/blob/main/compass.png?raw=true" alt="Compass" width="32px" height="32px">
+        </div>
+        <!-- Geolocation button -->
+        <div class="mapboxgl-ctrl-geolocate"></div>
+        <!-- Button to return to center -->
+        <button id="return-to-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px">
+                <path d="M12 3L4 9v12h5v-7h6v7h5V9z"/>
+            </svg>
+        </button>
+    </div>
 
-const bounds = [
-    [17.975, 48.855], // Southwest coordinates
-    [18.025, 48.885]  // Northeast coordinates
-];
+    <!-- JavaScript -->
+    <script>
+        // Set Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
+        
+        // Define center and bounds
+        const center = [18.000031, 48.870137];
+        const bounds = [[17.975, 48.855], [18.025, 48.885]];
+        
+        // Initialize Map
+        var map = new mapboxgl.Map({
+            container: 'map',
+            center: center,
+            zoom: 16,
+            bearing: -90.37,
+            pitch: 54.53,
+            style: 'mapbox://styles/bramble22/clt5vn98s000901qs2fmqft7o',
+            minZoom: 15,
+            maxZoom: 17,
+            maxBounds: bounds
+        });
+        
+        // Add geolocation control to the map
+        map.addControl(new mapboxgl.GeolocateControl({
+            positionOptions: { enableHighAccuracy: true },
+            trackUserLocation: true,
+            showUserLocation: true,
+            showAccuracyCircle: false
+        }));
+        
+        // Disable map tilting using two-finger gesture
+        map.touchPitch.disable();
+        
+        // Button to return to the center
+        document.getElementById('return-to-center').onclick = function() {
+            map.flyTo({
+                center: center,
+                zoom: 16
+            });
+        };
+        
+        // Update compass rotation
+        function updateCompass() {
+            var rotate = `rotate(${-map.getBearing()}deg)`;
+            document.getElementById('compass').style.transform = rotate;
+        }
+        
+        // Update compass rotation initially and on every map rotation
+        map.on('rotate', updateCompass);
+        updateCompass();
+        
+        // Hide Mapbox logo and attribution
+        map.once('load', function() {
+            var logo = document.getElementsByClassName('mapboxgl-ctrl-logo')[0];
+            if (logo) {
+                logo.style.display = 'none';
+            }
+            
+            var attributionToRemove = document.querySelector('.mapboxgl-ctrl-attrib');
+            attributionToRemove.remove();
+        });
+    </script>
 
-var map = new mapboxgl.Map({
-    container: 'map', // container ID
-    center: center, // starting position [lng, lat]
-    zoom: 16, // starting zoom
-    bearing: -90.37,
-    pitch: 54.53, // Set your desired pitch here
-    style: 'mapbox://styles/bramble22/clt5vn98s000901qs2fmqft7o',
-    minZoom: 15, // Minimum zoom level
-    maxZoom: 17, // Maximum zoom level
-    maxBounds: bounds // Set the map's geographical boundaries.
-});
-
-// Add geolocation control to the map.
-map.addControl(
-    new mapboxgl.GeolocateControl({
-        positionOptions: {
-            enableHighAccuracy: true
-        },
-        trackUserLocation: true,
-        showUserLocation: true,
-        showAccuracyCircle: false
-    })
-);
-
-// Disable map tilting using two-finger gesture
-map.touchPitch.disable();
-
-// Button to return to the center
-document.getElementById('return-to-center').onclick = function() {
-    map.flyTo({
-        center: center,
-        zoom: 16
-    });
-};
-
-function updateCompass() {
-    var rotate = `rotate(${-map.getBearing()}deg)`;
-    document.getElementById('compass').style.transform = rotate;
-}
-
-map.on('rotate', function() {
-    updateCompass();
-});
-
-// Initialize compass orientation
-updateCompass();
-</script>
 </body>
 </html>
