@@ -23,30 +23,42 @@
             bottom: 0;
             right: 0;
             background-color: rgba(0, 0, 0, 0.3); /* Slightly black but transparent background */
-            padding: 8px; /* Adjusted padding */
+            padding: 3px; /* Adjusted padding */
             margin: 10px; /* Adjusted margin */
-            border-radius: 12px; /* Rounded corners */
+            border-radius: 30px; /* Fully rounded corners */
         }
-        
-        /* Button to return to center */
-        #return-to-center {
+
+        /* Expandable menu container */
+        #expandable-menu {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Button to open expandable menu */
+        #expandable-menu-button {
             background-color: transparent; /* Make background transparent */
             border: none; /* Remove border */
             cursor: pointer;
-            padding: 10px;
+            padding: 8px; /* Adjusted padding */
             display: flex;
             align-items: center;
             font-size: 14px;
             box-shadow: none; /* Remove box shadow */
-            margin: 5px; /* Adjusted margin */
+            margin: 0 5px; /* Adjusted margin */
             transition: transform 0.2s ease; /* Add smooth transition */
         }
-        
+
         /* Animate button when pressed */
-        #return-to-center.pressed {
+        #expandable-menu-button.pressed {
             transform: scale(0.9);
         }
-        
+
+        /* Original icon design */
+        #return-to-center-icon {
+            fill: black; /* Icon color */
+        }
+
         /* Compass icon */
         #compass {
             margin: 10px;
@@ -55,6 +67,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        /* Expanded menu container */
+        #expanded-menu {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 10px); /* Position above the original menu */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Center horizontally */
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly black but transparent background */
+            padding: 3px; /* Adjusted padding */
+            border-radius: 30px; /* Fully rounded corners */
+        }
+
+        /* Show expanded menu when expanded */
+        #expandable-menu.expanded #expanded-menu {
+            display: flex;
+        }
+
+        /* Style for the return to center button inside the expanded menu */
+        #expanded-menu #return-to-center {
+            background-color: transparent; /* Make background transparent */
+            border: none; /* Remove border */
+            cursor: pointer;
+            padding: 8px; /* Adjusted padding */
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            box-shadow: none; /* Remove box shadow */
+            margin: 0 5px; /* Adjusted margin */
+            transition: transform 0.2s ease; /* Add smooth transition */
+        }
+
+        /* Animate button when pressed */
+        #expanded-menu #return-to-center.pressed {
+            transform: scale(0.9);
+        }
+
+        /* Animate expand menu button when pressed */
+        #expandable-menu-button.expanded.pressed {
+            transform: scale(0.9);
         }
     </style>
     
@@ -66,17 +119,25 @@
     
     <!-- Menu container -->
     <div id="menu">
+        <!-- Expandable menu -->
+        <div id="expandable-menu">
+            <!-- Button to open expandable menu -->
+            <button id="expandable-menu-button">
+                <img src="https://github.com/brambleappmatus/resources/blob/main/menu.png?raw=true" alt="Menu" width="24px" height="24px">
+            </button>
+            <!-- Expanded menu -->
+            <div id="expanded-menu">
+                <!-- Button to return to center -->
+                <button id="return-to-center">
+                    <img src="https://github.com/brambleappmatus/resources/blob/main/home.png?raw=true" alt="Return to Center" width="24px" height="24px">
+                </button>
+            </div>
+        </div>
         <!-- Compass icon -->
         <div id="compass">
             <!-- Replace 'YOUR_COMPASS_IMAGE_URL' with the URL of your PNG compass image -->
             <img src="https://github.com/brambleappmatus/resources/blob/main/compass.png?raw=true" alt="Compass" width="32px" height="32px">
         </div>
-        <!-- Button to return to center -->
-        <button id="return-to-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px">
-                <path d="M12 3L4 9v12h5v-7h6v7h5V9z"/>
-            </svg>
-        </button>
     </div>
 
     <!-- JavaScript -->
@@ -128,6 +189,17 @@
         // Update compass rotation initially and on every map rotation
         map.on('rotate', updateCompass);
         updateCompass();
+
+        // Toggle expanded menu
+        document.getElementById('expandable-menu-button').onclick = function() {
+            var expandedMenu = document.getElementById('expandable-menu');
+            expandedMenu.classList.toggle('expanded');
+            this.classList.toggle('pressed'); // Add 'pressed' class for animation
+            // Remove 'pressed' class after animation completes
+            setTimeout(() => {
+                this.classList.remove('pressed');
+            }, 200); // Adjust timeout to match animation duration
+        };
         
         // Hide Mapbox logo and attribution
         map.once('load', function() {
