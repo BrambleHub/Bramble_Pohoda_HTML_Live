@@ -4,152 +4,45 @@
     <meta charset="utf-8">
     <title>Smooth Pitch Correction Map</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    
-    <!-- Include Mapbox GL JS -->
     <script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
-    
-    <!-- CSS Styles -->
     <style>
-        /* Reset default margin and padding */
-        body { margin: 0; padding: 0; }
-        
-        /* Map container styles */
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        
-        /* Menu container */
-        #menu {
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow: hidden; /* Initially prevent scrolling */
+        }
+        #map {
             position: absolute;
+            top: 0;
             bottom: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.3); /* Slightly black but transparent background */
-            padding: 3px; /* Adjusted padding */
-            margin: 10px; /* Adjusted margin */
-            border-radius: 30px; /* Fully rounded corners */
+            width: 100%;
         }
-
-        /* Expandable menu container */
-        #expandable-menu {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Button to open expandable menu */
-        #expandable-menu-button {
-            background-color: transparent; /* Make background transparent */
-            border: none; /* Remove border */
-            cursor: pointer;
-            padding: 8px; /* Adjusted padding */
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            box-shadow: none; /* Remove box shadow */
-            margin: 0 5px; /* Adjusted margin */
-            transition: transform 0.2s ease; /* Add smooth transition */
-        }
-
-        /* Animate button when pressed */
-        #expandable-menu-button.pressed {
-            transform: scale(0.9);
-        }
-
-        /* Original icon design */
-        #return-to-center-icon {
-            fill: black; /* Icon color */
-        }
-
-        /* Compass icon */
         #compass {
-            margin: 10px;
-            transition: transform 0.5s ease; /* Add smooth transition */
-            transform-origin: center; /* Set transform origin to center */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Expanded menu container */
-        #expanded-menu {
-            display: none;
             position: absolute;
-            bottom: calc(100% + 10px); /* Position above the original menu */
-            left: 50%; /* Center horizontally */
-            transform: translateX(-50%); /* Center horizontally */
-            background-color: rgba(0, 0, 0, 0.3); /* Slightly black but transparent background */
-            padding: 3px; /* Adjusted padding */
-            border-radius: 30px; /* Fully rounded corners */
-        }
-
-        /* Show expanded menu when expanded */
-        #expandable-menu.expanded #expanded-menu {
-            display: flex;
-        }
-
-        /* Style for the return to center button inside the expanded menu */
-        #expanded-menu #return-to-center {
-            background-color: transparent; /* Make background transparent */
-            border: none; /* Remove border */
-            cursor: pointer;
-            padding: 8px; /* Adjusted padding */
+            bottom: 10px;
+            right: 10px;
+            z-index: 1;
+            transform-origin: center center;
             display: flex;
             align-items: center;
-            font-size: 14px;
-            box-shadow: none; /* Remove box shadow */
-            margin: 0 5px; /* Adjusted margin */
-            transition: transform 0.2s ease; /* Add smooth transition */
-        }
-
-        /* Animate button when pressed */
-        #expanded-menu #return-to-center.pressed {
-            transform: scale(0.9);
-        }
-
-        /* Animate expand menu button when pressed */
-        #expandable-menu-button.expanded.pressed {
-            transform: scale(0.9);
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
     </style>
-    
 </head>
 <body>
-
-    <!-- Map container -->
     <div id='map'></div>
-    
-    <!-- Menu container -->
-    <div id="menu">
-        <!-- Expandable menu -->
-        <div id="expandable-menu">
-            <!-- Button to open expandable menu -->
-            <button id="expandable-menu-button">
-                <img src="https://github.com/brambleappmatus/resources/blob/main/menu.png?raw=true" alt="Menu" width="24px" height="24px">
-            </button>
-            <!-- Expanded menu -->
-            <div id="expanded-menu">
-                <!-- Button to return to center -->
-                <button id="return-to-center">
-                    <img src="https://github.com/brambleappmatus/resources/blob/main/home.png?raw=true" alt="Return to Center" width="24px" height="24px">
-                </button>
-            </div>
-        </div>
-        <!-- Compass icon -->
-        <div id="compass">
-            <!-- Replace 'YOUR_COMPASS_IMAGE_URL' with the URL of your PNG compass image -->
-            <img src="https://github.com/brambleappmatus/resources/blob/main/compass.png?raw=true" alt="Compass" width="32px" height="32px">
-        </div>
+    <div id="compass">
+        <img src="https://github.com/brambleappmatus/resources/blob/main/compass.png?raw=true" alt="Compass" width="40px" height="40px">
     </div>
-
-    <!-- JavaScript -->
     <script>
-        // Set Mapbox access token
         mapboxgl.accessToken = 'pk.eyJ1IjoiYnJhbWJsZTIyIiwiYSI6ImNsdDE2b283djExcHUya3BsdWs0OXFydzgifQ.r3GWm3olfdS8hRsntYWIzA';
-        
-        // Define center and bounds
         const center = [18.000031, 48.870137];
         const bounds = [[17.975, 48.855], [18.025, 48.885]];
         
-        // Initialize Map
         var map = new mapboxgl.Map({
             container: 'map',
             center: center,
@@ -161,57 +54,21 @@
             maxZoom: 17,
             maxBounds: bounds
         });
-        
-        // Disable map tilting using two-finger gesture
         map.touchPitch.disable();
-        
-        // Button to return to the center
-        document.getElementById('return-to-center').onclick = function() {
-            this.classList.add('pressed'); // Add 'pressed' class for animation
-            map.flyTo({
-                center: center,
-                zoom: 16,
-                speed: 0.5, // Adjust fly speed as needed
-                curve: 1 // Adjust curve as needed
-            });
-            // Remove 'pressed' class after animation completes
-            setTimeout(() => {
-                this.classList.remove('pressed');
-            }, 200); // Adjust timeout to match animation duration
-        };
-        
-        // Update compass rotation
+
         function updateCompass() {
             var rotate = `rotate(${-map.getBearing()}deg)`;
             document.getElementById('compass').style.transform = rotate;
         }
-        
-        // Update compass rotation initially and on every map rotation
         map.on('rotate', updateCompass);
-        updateCompass();
 
-        // Toggle expanded menu
-        document.getElementById('expandable-menu-button').onclick = function() {
-            var expandedMenu = document.getElementById('expandable-menu');
-            expandedMenu.classList.toggle('expanded');
-            this.classList.toggle('pressed'); // Add 'pressed' class for animation
-            // Remove 'pressed' class after animation completes
-            setTimeout(() => {
-                this.classList.remove('pressed');
-            }, 200); // Adjust timeout to match animation duration
-        };
-        
-        // Hide Mapbox logo and attribution
         map.once('load', function() {
-            var logo = document.getElementsByClassName('mapboxgl-ctrl-logo')[0];
-            if (logo) {
-                logo.style.display = 'none';
-            }
-            
-            var attributionToRemove = document.querySelector('.mapboxgl-ctrl-attrib');
-            attributionToRemove.remove();
+            document.getElementsByClassName('mapboxgl-ctrl-logo')[0].style.display = 'none';
+            document.querySelector('.mapboxgl-ctrl-attrib').remove();
+
+            // Set initial rotation of the compass
+            document.getElementById('compass').style.transform = `rotate(${map.getBearing() + 180}deg)`; // Add 180 degrees
         });
     </script>
-
 </body>
 </html>
