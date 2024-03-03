@@ -250,21 +250,38 @@
                         tb.add(model);
                     });
 
-                      // Define options for the castle
+                      // Define options for rock
                       const options11 = {
-                        obj: 'https://raw.githubusercontent.com/brambleappmatus/threeboxobj/main/bouncy_castle_from_poly_by_google/scene.gltf',
+                        obj: 'https://raw.githubusercontent.com/brambleappmatus/threeboxobj/main/rockform/rockform.gltf',
                         type: 'gltf',
-                        scale: { x: 200, y: 200, z: 200},
+                        scale: { x: 5, y: 5, z: 5},
+                        units: 'meters',
+                        rotation: { x: 90, y: -90, z: 0 } // Adjust rotation as needed
+                    };
+
+                    // Load the rock
+                    tb.loadObj(options11, (model) => {
+                        model.setCoords([17.989361, 48.863926]); // Set the coordinates
+                        model.setRotation({ x: 0, y: 0, z: -70}); // Adjust rotation as needed
+                        tb.add(model);
+                    });
+
+                         // Define options for the castle
+                         const options12 = {
+                        obj: 'https://raw.githubusercontent.com/brambleappmatus/threeboxobj/main/largerockform/rockform.gltf',
+                        type: 'gltf',
+                        scale: { x: 5, y: 5, z: 5},
                         units: 'meters',
                         rotation: { x: 90, y: -90, z: 0 } // Adjust rotation as needed
                     };
 
                     // Load the castle
-                    tb.loadObj(options11, (model) => {
-                        model.setCoords([18.001179, 48.866997]); // Set the coordinates
-                        model.setRotation({ x: 0, y: 0, z: -70}); // Adjust rotation as needed
+                    tb.loadObj(options12, (model) => {
+                        model.setCoords([17.985335, 48.860392]); // Set the coordinates
+                        model.setRotation({ x: 0, y: 0, z: 0}); // Adjust rotation as needed
                         tb.add(model);
                     });
+
 
 
 
